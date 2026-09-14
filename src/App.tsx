@@ -20,6 +20,8 @@ async function PdfUpload(file: File) {
 }
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#161515] text-white">
+
+      {/* colocar modificações na brench correta */}
       <div className="flex flex-col items-center px-4 text-center">
 
       <div className="h-16 w-16 mb-6 flex items-center justify-center text-slate-400">
