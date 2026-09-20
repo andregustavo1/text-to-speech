@@ -2,10 +2,13 @@ import { RiMenuLine } from 'react-icons/ri'
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
-function Lib() {
+interface LibProps {
+  onPdfSelect: (pdfUrl: string) => void
+}
+
+function Lib({ onPdfSelect }: LibProps) {
   const [biblioteca, setBiblioteca] = useState(false)
   const [pdfs, setPdfs] = useState<{ name: string }[]>([])
-  const [pdfAberto, setPdfAberto] = useState<string | null>(null)
 
   return (
     <div className="relative">
@@ -46,7 +49,8 @@ function Lib() {
                         .from('pdfs')
                         .getPublicUrl(pdf.name)
 
-                      setPdfAberto(data.publicUrl)
+                      onPdfSelect(data.publicUrl)
+                      setBiblioteca(false)
                     }}
                   >
                     {pdf.name}
@@ -57,14 +61,6 @@ function Lib() {
               ))}
             </div>
 
-            {pdfAberto && (
-              <div className="mt-5">
-                <iframe
-                  className="h-[500px] w-full rounded-lg"
-                  src={pdfAberto}
-                />
-              </div>
-            )}
           </div>
         </div>
       )}

@@ -44,7 +44,7 @@ async function PdfUpload(file: File) {
       }} />
 
       {popup && (
-        <div className="absolute left-1/2 top-full z-50 mt-4 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-lg bg-stone-950/80 px-5 py-2 text-sm">
+        <div className="absolute left-1/2 top-full z-50 mt-4 flex -translate-x-1/2 items-center gap-2 rounded-lg bg-stone-950/80 px-5 py-2 text-sm">
           <RiCheckboxCircleLine className="text-lg text-green-400" />
           <p>Seu PDF foi adicionado na biblioteca</p>
         </div>

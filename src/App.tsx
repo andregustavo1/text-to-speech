@@ -1,8 +1,11 @@
+import { useState } from 'react'
 import { RiBookLine } from 'react-icons/ri'
 import Lib from './components/Lib'
+import PdfViewer from './components/PdfViewer'
 import Upload from './components/Upload'
 
 function App() {
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null)
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#161515] text-white">
@@ -18,8 +21,10 @@ function App() {
 
         <div className="relative flex flex-col items-center">
           <Upload />
-          <Lib />
+          <Lib onPdfSelect={setPdfUrl} />
         </div>
+
+        <PdfViewer pdfUrl={pdfUrl} />
 
       </div>
     </div>
