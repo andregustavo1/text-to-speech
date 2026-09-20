@@ -39,6 +39,7 @@ async function PdfUpload(file: File) {
           <p className="">Importar PDF</p>
         </label>
 
+       {/* Aqui eu coloquei pro pdf subir no budget public do supabase mas a gente PRECISA deixar privado depois do sistema de login */}
         <input className="sr-only" id="pdf-upload" type="file" accept="application/pdf" 
           onChange={(e) => { 
             const file = e.target.files?.[0]
