@@ -11,9 +11,17 @@ function App() {
 
 {/* função de importar o pdf */}
 async function PdfUpload(file: File) {
+  {/* Aqui tratei o erro de upload por nome inválido */}
+  const nomeArquivo = file.name
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9.-]/g, '_')
+    .replace(/_+/g, '_')
+    .toLowerCase()
+
   await supabase.storage
     .from('pdfs')
-    .upload(file.name, file)
+    .upload(nomeArquivo, file)
 
   setPopup(true)
   setTimeout(() => setPopup(false), 3500)
@@ -69,7 +77,7 @@ async function PdfUpload(file: File) {
 
         {biblioteca && (
           <div className="fixed inset-0 z-10 flex items-center justify-center">
-            <div className="w-[420px] bg-[#111111] rounded-xl p-6 text-left shadow-xl">
+            <div className="w-fit bg-[#111111] rounded-xl p-6 text-left shadow-xl">
               <div className="mb-5 flex items-center justify-between">
                 <h2 className="text-xl font-semibold">Biblioteca</h2>
                 <button
