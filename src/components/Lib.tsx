@@ -1,27 +1,43 @@
 import { RiMenuLine } from 'react-icons/ri'
+import { RiBookLine } from 'react-icons/ri'
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
 interface LibProps {
   onPdfSelect: (pdfUrl: string) => void
+  // função de aparecer apenas o icone quando estiver no navbar
+  iconOnly?: boolean
 }
 
-function Lib({ onPdfSelect }: LibProps) {
+function Lib({ onPdfSelect, iconOnly = false }: LibProps) {
   const [biblioteca, setBiblioteca] = useState(false)
   const [pdfs, setPdfs] = useState<{ name: string }[]>([])
 
+  const handleOpen = async () => {
+    const { data } = await supabase.storage.from('pdfs').list()
+    setPdfs(data || [])
+    setBiblioteca(true)
+  }
+
   return (
     <div className="relative">
-      <div
-        className="flex items-center gap-2 rounded-lg bg-slate-500 hover:bg-slate-400 duration-150 px-8 py-2 cursor-pointer"
-        onClick={async () => {
-          const { data } = await supabase.storage.from('pdfs').list()
-          setPdfs(data || [])
-          setBiblioteca(true)
-        }}
-      >
-        <p>Biblioteca</p>
-      </div>
+       {/* iconOnly para a navbar */}
+      {iconOnly ? (
+        <button
+          onClick={handleOpen}
+          className="flex items-center justify-center p-2 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition duration-150 cursor-pointer"
+        >
+          <RiBookLine className="text-2xl" />
+        </button>
+      ) : (
+        /* Botão padrão*/
+        <div
+          className="flex items-center gap-2 rounded-lg bg-slate-500 hover:bg-slate-400 duration-150 px-8 py-2 cursor-pointer"
+          onClick={handleOpen}
+        >
+          <p>Biblioteca</p>
+        </div>
+      )}
 
       {biblioteca && (
         <div className="fixed inset-0 z-10 flex items-center justify-center">

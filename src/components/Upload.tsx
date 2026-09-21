@@ -9,6 +9,7 @@ function Upload() {
 {/* função de importar o pdf */}
 async function PdfUpload(file: File) {
   {/* Aqui tratei o erro de upload por nome inválido */}
+  {/* Mazin, tem q refazer essa função depois, pois fiz com IA para teste */}
   const nomeArquivo = file.name
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')

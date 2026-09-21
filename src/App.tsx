@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#161515] text-white">
       <div className="flex flex-col items-center px-4 text-center">
-        
+
         {/* Função para quando o pdf aparecer, o hero some */}
         {!pdfUrl && (
           <>
@@ -25,12 +25,12 @@ function App() {
 
             <div className="relative flex flex-col items-center">
               <Upload />
-              <Lib onPdfSelect={setPdfUrl} />
+              <Lib onPdfSelect={setPdfUrl}  />
             </div>
           </>
         )}
 
-        <PdfViewer pdfUrl={pdfUrl} />
+        <PdfViewer pdfUrl={pdfUrl} onPdfSelect={setPdfUrl}/>
 
       </div>
     </div>

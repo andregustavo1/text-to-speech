@@ -1,8 +1,11 @@
+import Lib from './Lib'
+
 interface PdfViewerProps {
   pdfUrl: string | null
+  onPdfSelect: (pdfUrl: string) => void
 }
 
-function PdfViewer({ pdfUrl }: PdfViewerProps) {
+function PdfViewer({ pdfUrl, onPdfSelect }: PdfViewerProps) {
   {/* Aqui se a interface nao receber nenhum pdf ele fica escondido*/}
   if (!pdfUrl) {
     return null
@@ -18,9 +21,14 @@ function PdfViewer({ pdfUrl }: PdfViewerProps) {
         title="Visualizador de PDF"
       />
 
-      <div className="bg-[#111111] rounded-full px-4 py-2">
-        <p>Navbar</p>
+      <div className="bg-[#111111] flex items-center justify-between rounded-full px-4 py-2">
+        <div className="flex items-center gap-2">
+            <button className="cursor-pointer">Seta</button>
+            <div className='text-sm text-slate-300'>1/12</div>
+            <button className="cursor-pointer">Seta</button>
+        </div>
         
+        <Lib onPdfSelect={onPdfSelect} iconOnly={true} />
       </div>
     </div>
   )
