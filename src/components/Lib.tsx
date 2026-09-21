@@ -5,11 +5,9 @@ import { supabase } from '../lib/supabase'
 
 interface LibProps {
   onPdfSelect: (pdfUrl: string) => void
-  // função de aparecer apenas o icone quando estiver no navbar
-  iconOnly?: boolean
 }
 
-function Lib({ onPdfSelect, iconOnly = false }: LibProps) {
+function Lib({ onPdfSelect }: LibProps) {
   const [biblioteca, setBiblioteca] = useState(false)
   const [pdfs, setPdfs] = useState<{ name: string }[]>([])
 
@@ -23,19 +21,10 @@ function Lib({ onPdfSelect, iconOnly = false }: LibProps) {
 
   return (
     <div className="relative">
-       {/* iconOnly para a navbar */}
-      {iconOnly ? (
-        <button
-          onClick={handleOpen}
-          className="flex items-center justify-center p-2 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition duration-150 cursor-pointer"
-        ><RiBookLine className="text-2xl" /></button>
-      ) : (
-        /* Botão padrão*/
-        <div
-          className="flex items-center gap-2 rounded-lg bg-slate-500 hover:bg-slate-400 duration-150 px-8 py-2 cursor-pointer"
-          onClick={handleOpen}
-        ><p>Biblioteca</p></div>
-      )}
+      <div
+        className="flex items-center gap-2 rounded-lg bg-slate-500 hover:bg-slate-400 duration-150 px-8 py-2 cursor-pointer"
+        onClick={handleOpen}
+      ><p>Biblioteca</p></div>
 
       {biblioteca && (
         <div className="fixed inset-0 z-10 flex items-center justify-center select-none">

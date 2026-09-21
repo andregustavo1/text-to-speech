@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { RiArrowLeftSLine, RiArrowRightSLine, RiBookLine } from 'react-icons/ri'
+import { RiArrowLeftSLine, RiArrowRightSLine, RiMenuLine } from 'react-icons/ri'
 import { Document, Page, pdfjs } from 'react-pdf'
 import Lib from './Lib'
 
@@ -64,7 +64,7 @@ function PdfViewer({ pdfUrl, onPdfSelect }: PdfViewerProps) {
             ><RiArrowRightSLine className="text-slate-200 text-xl" /></button>
         </div>
         
-        <Lib onPdfSelect={onPdfSelect} iconOnly={true} />
+        <RiMenuLine />
       </div>
     </div>
   )
