@@ -13,7 +13,7 @@ function Lib({ onPdfSelect }: LibProps) {
   return (
     <div className="relative">
       <div
-        className="flex items-center gap-2 rounded-lg bg-slate-500 hover:bg-slate-400 px-8 py-2 cursor-pointer"
+        className="flex items-center gap-2 rounded-lg bg-slate-500 hover:bg-slate-400 duration-150 px-8 py-2 cursor-pointer"
         onClick={async () => {
           const { data } = await supabase.storage.from('pdfs').list()
           setPdfs(data || [])
@@ -25,7 +25,7 @@ function Lib({ onPdfSelect }: LibProps) {
 
       {biblioteca && (
         <div className="fixed inset-0 z-10 flex items-center justify-center">
-          <div className="w-fit bg-[#111111] rounded-xl p-6 text-left shadow-xl">
+          <div className="w-screen lg:w-fit bg-[#111111] rounded-xl p-6 text-left shadow-xl">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-xl font-semibold">Biblioteca</h2>
               <button

@@ -27,7 +27,7 @@ async function PdfUpload(file: File) {
   return (
     <>
       {/* botão principal */}
-      <label className="mb-2 flex items-center gap-2 rounded-lg bg-blue-500 hover:bg-blue-600 px-8 py-2 cursor-pointer" htmlFor="pdf-upload">
+      <label className="mb-2 flex items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 duration-150 px-8 py-2 cursor-pointer" htmlFor="pdf-upload">
         <div className="flex h-5 w-5 items-center justify-center">
           <RiUploadLine />
         </div>

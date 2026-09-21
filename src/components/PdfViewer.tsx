@@ -3,6 +3,7 @@ interface PdfViewerProps {
 }
 
 function PdfViewer({ pdfUrl }: PdfViewerProps) {
+  {/* Aqui se a interface nao receber nenhum pdf ele fica escondido*/}
   if (!pdfUrl) {
     return null
   }
@@ -16,6 +17,11 @@ function PdfViewer({ pdfUrl }: PdfViewerProps) {
         src={pdfUrl}
         title="Visualizador de PDF"
       />
+
+      <div className="bg-[#111111] rounded-full px-4 py-2">
+        <p>Navbar</p>
+        
+      </div>
     </div>
   )
 }
