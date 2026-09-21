@@ -49,22 +49,24 @@ function PdfViewer({ pdfUrl, onPdfSelect }: PdfViewerProps) {
       ><Page pageNumber={pageNumber} /></Document>
 
       {/* Navbar */}
-      <div className="bg-[#111111] fixed bottom-4 w-[350px] flex items-center justify-between rounded-full px-4 py-2">
-        <div className="flex items-center gap-2">
+      <div className="bg-[#111111] fixed bottom-4 w-[350px] flex items-center justify-between rounded-full px-2 py-2">
+        <div className="flex items-center gap-1">
             <button 
-              className="cursor-pointer p-1 rounded-full hover:bg-slate-800 duration-150 flex items-center justify-center" 
+              className="cursor-pointer p-2 rounded-full hover:bg-slate-800 duration-150 flex items-center justify-center" 
               onClick={prevPage}
             ><RiArrowLeftSLine className="text-slate-200 text-xl" /></button>
 
             <div className="text-sm text-slate-300">{pageNumber}/{numPages ?? '--'}</div>
 
             <button 
-              className="cursor-pointer p-1 rounded-full hover:bg-slate-800 duration-150 flex items-center justify-center" 
+              className="cursor-pointer p-2 rounded-full hover:bg-slate-800 duration-150 flex items-center justify-center" 
               onClick={nextPage}
             ><RiArrowRightSLine className="text-slate-200 text-xl" /></button>
         </div>
         
-        <RiMenuLine />
+        <div className="flex items-center p-3 rounded-full hover:bg-slate-800 duration-150 cursor-pointer">
+          <RiMenuLine />
+        </div>
       </div>
     </div>
   )
