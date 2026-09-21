@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri'
+import { RiArrowLeftSLine, RiArrowRightSLine, RiBookLine } from 'react-icons/ri'
 import { Document, Page, pdfjs } from 'react-pdf'
 import Lib from './Lib'
 
