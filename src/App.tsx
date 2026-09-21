@@ -8,7 +8,7 @@ function App() {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#161515] text-white">
+    <div className="flex min-h-screen items-center justify-center bg-[#161515] text-white overflow-hidden">
       <div className="flex flex-col items-center px-4 text-center">
 
         {/* Função para quando o pdf aparecer, o hero some */}

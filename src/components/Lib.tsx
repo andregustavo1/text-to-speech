@@ -26,53 +26,43 @@ function Lib({ onPdfSelect, iconOnly = false }: LibProps) {
         <button
           onClick={handleOpen}
           className="flex items-center justify-center p-2 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition duration-150 cursor-pointer"
-        >
-          <RiBookLine className="text-2xl" />
-        </button>
+        ><RiBookLine className="text-2xl" /></button>
       ) : (
         /* Botão padrão*/
         <div
           className="flex items-center gap-2 rounded-lg bg-slate-500 hover:bg-slate-400 duration-150 px-8 py-2 cursor-pointer"
           onClick={handleOpen}
-        >
-          <p>Biblioteca</p>
-        </div>
+        ><p>Biblioteca</p></div>
       )}
 
       {biblioteca && (
-        <div className="fixed inset-0 z-10 flex items-center justify-center">
+        <div className="fixed inset-0 z-10 flex items-center justify-center select-none">
           <div className="w-screen lg:w-fit bg-[#111111] rounded-xl p-6 text-left shadow-xl">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-xl font-semibold">Biblioteca</h2>
               <button
                 className="text-2xl text-slate-400 hover:text-white"
                 onClick={() => setBiblioteca(false)}
-              >
-                x
-              </button>
+              >x</button>
             </div>
 
-            <div className="flex flex-col gap-2 cursor-pointer">
+            <div className="flex flex-col gap-2">
               {pdfs.map((pdf) => (
-                <div
+                <div className="flex items-center justify-between rounded-lg bg-[#0c0c0c] px-4 py-2 hover:bg-slate-800 duration-200 cursor-pointer"
                   key={pdf.name}
-                  className="flex items-center justify-between rounded-lg bg-[#0c0c0c] px-4 py-3 hover:bg-slate-800 duration-200"
-                >
-                  <button
-                    className="pr-4 text-left cursor-pointer"
-                    onClick={() => {
-                      const { data } = supabase.storage
-                        .from('pdfs')
-                        .getPublicUrl(pdf.name)
+                  onClick={() => {
+                    const { data } = supabase.storage
+                      .from('pdfs')
+                      .getPublicUrl(pdf.name)
+                    onPdfSelect(data.publicUrl)
+                    setBiblioteca(false)
+                  }}>
 
-                      onPdfSelect(data.publicUrl)
-                      setBiblioteca(false)
-                    }}
-                  >
-                    {pdf.name}
-                  </button>
+                  <div className="pr-4 text-left cursor-pointer">{pdf.name}</div>
 
-                  <RiMenuLine className="shrink-0 text-xl text-slate-400" />
+                  <div onClick={(e) => e.stopPropagation()} className='hover:bg-slate-500 cursor-pointer duration-150 rounded-full p-1.5'>
+                    <RiMenuLine className="shrink-0 text-xl z-10 text-slate-400" />
+                  </div>
                 </div>
               ))}
             </div>
