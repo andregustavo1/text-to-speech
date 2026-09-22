@@ -6,14 +6,18 @@ import Lib from './Lib'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString()
+// função copiada do readme do react-pdf https://github.com/wojtekmaj/react-pdf/blob/main/packages/react-pdf/README.md import worker (recommended)
+// Na documentação fala que o workerSrc precisa estar no mesmo arquivo aonde vou usar os componentes do react-pdf, no caso aqui no nosso componente PdfViewer 
+pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString()  
 
 interface PdfViewerProps {
   pdfUrl: string | null
   onPdfSelect: (pdfUrl: string) => void
+  /* função para dysplay de menu */
+  onMenuToggle?: () => void
 }
 
-function PdfViewer({ pdfUrl, onPdfSelect }: PdfViewerProps) {
+function PdfViewer({ pdfUrl, onPdfSelect, onMenuToggle }: PdfViewerProps) {
   const [numPages, setNumPages] = useState<number | null>(null)
   const [pageNumber, setPageNumber] = useState<number>(1)
 
@@ -24,11 +28,10 @@ function PdfViewer({ pdfUrl, onPdfSelect }: PdfViewerProps) {
 
   {/* funções avançar e voltar paginas */}
   function prevPage() {
-  setPageNumber((prev) => Math.max(prev - 1, 1))
+    setPageNumber(pageNumber - 1)
   }
-
   function nextPage() {
-    setPageNumber((prev) => (numPages ? Math.min(prev + 1, numPages) : prev + 1))
+    setPageNumber(pageNumber + 1)
   }
 
   {/* Aqui se a interface nao receber nenhum pdf ele fica escondido*/}
@@ -64,7 +67,7 @@ function PdfViewer({ pdfUrl, onPdfSelect }: PdfViewerProps) {
             ><RiArrowRightSLine className="text-slate-200 text-xl" /></button>
         </div>
         
-        <div className="flex items-center p-3 rounded-full hover:bg-slate-800 duration-150 cursor-pointer">
+        <div onClick={onMenuToggle} className="flex items-center p-3 rounded-full hover:bg-slate-800 duration-150 cursor-pointer">
           <RiMenuLine />
         </div>
       </div>
