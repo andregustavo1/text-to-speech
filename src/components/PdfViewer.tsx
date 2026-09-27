@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { RiArrowLeftSLine, RiArrowRightSLine, RiMenuLine } from 'react-icons/ri'
 import { Document, Page, pdfjs } from 'react-pdf'
-import Lib from './Lib'
+// import Lib from './Lib'
 
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
@@ -17,14 +17,19 @@ interface PdfViewerProps {
   onMenuToggle?: () => void
 }
 
-function PdfViewer({ pdfUrl, onPdfSelect, onMenuToggle }: PdfViewerProps) {
+function PdfViewer({ pdfUrl, onMenuToggle }: PdfViewerProps) {
   const [numPages, setNumPages] = useState<number | null>(null)
   const [pageNumber, setPageNumber] = useState<number>(1)
+  const [inputPage, setInputPage] = useState<string>(String(pageNumber))
 
   {/* função toda vez que o pdf mudsar, ele volta para a pagina 1 */}
   useEffect(() => {
     setPageNumber(1)
   }, [pdfUrl])
+
+  useEffect(() => {
+    setInputPage(String(pageNumber))
+  }, [pageNumber])
 
   {/* funções avançar e voltar paginas */}
   function prevPage() {
@@ -32,6 +37,10 @@ function PdfViewer({ pdfUrl, onPdfSelect, onMenuToggle }: PdfViewerProps) {
   }
   function nextPage() {
     setPageNumber(pageNumber + 1)
+  }
+
+  function indexPage() {
+    setPageNumber(Number(inputPage))
   }
 
   {/* Aqui se a interface nao receber nenhum pdf ele fica escondido*/}
@@ -59,11 +68,19 @@ function PdfViewer({ pdfUrl, onPdfSelect, onMenuToggle }: PdfViewerProps) {
               onClick={prevPage}
             ><RiArrowLeftSLine className="text-slate-200 text-xl" /></button>
 
-            <div className="text-sm text-slate-300">{pageNumber}/{numPages ?? '--'}</div>
+            <div className="text-sm text-slate-300 gap-1 flex items-center">
+      <input
+        value={inputPage}
+        onChange={(e) => setInputPage(e.target.value)}
+        onBlur={indexPage}
+        onKeyDown={(e) => e.key === 'Enter' && indexPage()}
+        className="w-8 h-8 bg-transparent text-center text-white outline-none rounded-full hover:bg-slate-800 focus:bg-slate-800 cursor-pointer [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+              <div>/</div>
+              <div className=''>{numPages ?? '--'}</div>
+            </div>
 
             <button 
-              className="cursor-pointer p-2 rounded-full hover:bg-slate-800 duration-150 flex items-center justify-center" 
-              onClick={nextPage}
+              className="cursor-pointer p-2 rounded-full hover:bg-slate-800 duration-150 flex items-center justify-center" onClick={nextPage}
             ><RiArrowRightSLine className="text-slate-200 text-xl" /></button>
         </div>
         

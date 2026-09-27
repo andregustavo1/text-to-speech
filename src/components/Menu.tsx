@@ -2,9 +2,10 @@ import { RiCloseLine, RiBookLine, RiSunLine, RiSettings3Line } from 'react-icons
 
 interface MenuProps {
   onClose?: () => void
+  onOpenLib?: () => void
 }
 
-function Menu({ onClose }: MenuProps) {
+function Menu({ onClose, onOpenLib }: MenuProps) {
   return (
     <div className="w-72 sm:w-80 h-screen bg-[#101010] flex flex-col border-r border-[#222222] select-none">
       <div className="flex items-center justify-between px-6 py-5 border-b border-[#222222]">
@@ -20,7 +21,7 @@ function Menu({ onClose }: MenuProps) {
       </div>
 
       <div className="flex flex-col gap-2 py-4 px-4">
-        <button
+        <button onClick={onOpenLib}
           className="flex items-center gap-4 w-full py-2 px-3 rounded-xl hover:bg-slate-800/40 transition duration-300 text-left cursor-pointer group">
 
           <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-[#222222] text-slate-400 group-hover:text-blue-600 group-hover:bg-black/70  duration-300">
@@ -52,7 +53,7 @@ function Menu({ onClose }: MenuProps) {
           </div>
 
           <div className="text-base font-semibold text-slate-200">
-            <p>Configurações TTS</p>
+            <p>Configurações</p>
           </div>
         </button>
 
