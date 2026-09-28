@@ -1,4 +1,4 @@
-import { RiMenuLine, RiDeleteBinLine, RiPencilLine, RiFilePdfLine } from 'react-icons/ri'
+import { RiMenuLine, RiDeleteBinLine, RiPencilLine } from 'react-icons/ri'
 import { RiBookLine } from 'react-icons/ri'
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
