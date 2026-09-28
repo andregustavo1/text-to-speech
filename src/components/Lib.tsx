@@ -19,24 +19,28 @@ function Lib({ isOpen, onClose, onPdfSelect }: LibProps) {
   const [editingPdf, setEditingPdf] = useState<string | null>(null)
   const [newName, setNewName] = useState('')
 
+const [userId, setUserId] = useState<string | null>(null)
+
     useEffect(() => {
       if (isOpen) {
-        supabase.storage.from('pdfs').list().then(({ data }) => setPdfs(data || []))
+            supabase.auth.getUser().then(({ data: { user } }) => {
+            if (!user) return
+            setUserId(user.id)
+            supabase.storage.from('pdfs').list(user.id).then(({ data }) => setPdfs(data || []))
+          })
       }
     }, [isOpen])
 
   if (!isOpen) return null
 
-  // função de editar o pdf
+  // função de renomear o pdf
   async function handleRename(oldName: string) {
-    if (!newName.trim()) {
+    if (!newName.trim() || !userId) {
       setEditingPdf(null)
       return
     }
-    // joga .pdf no final e foda-se
     const finalName = newName.replace(/\.pdf$/i, '') + '.pdf'
-    await supabase.storage.from('pdfs').move(oldName, finalName)
-
+    await supabase.storage.from('pdfs').move(`${userId}/${oldName}`, `${userId}/${finalName}`)
     setPdfs((prev) =>
       prev.map((item) => (item.name === oldName ? { ...item, name: finalName } : item))
     )
@@ -46,7 +50,11 @@ function Lib({ isOpen, onClose, onPdfSelect }: LibProps) {
 
   // da um refresh na lista depois de ter adicionado um novo pdf
   async function atualizarLista() {
-    const { data } = await supabase.storage.from('pdfs').list()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    setUserId(user.id)
+    const { data } = await supabase.storage.from('pdfs').list(user.id)
     setPdfs(data || [])
   }
 
@@ -74,13 +82,15 @@ function Lib({ isOpen, onClose, onPdfSelect }: LibProps) {
                   
                   <div className="flex items-center justify-between rounded-lg bg-[#0c0c0c] px-4 py-2 hover:bg-slate-800 duration-200 cursor-pointer"
                     
-                    onClick={() => {
-                      const { data } = supabase.storage
-                        .from('pdfs')
-                        .getPublicUrl(pdf.name)
-                      onPdfSelect(data.publicUrl)
+                  onClick={async () => {
+                    const { data } = await supabase.storage
+                      .from('pdfs')
+                      .createSignedUrl(`${userId}/${pdf.name}`, 3600)     
+                    if (data?.signedUrl) {
+                      onPdfSelect(data.signedUrl)
                       onClose()
-                    }}>
+                    }
+                  }}>
                   
                   {editingPdf === pdf.name ? (
                     <input
@@ -109,7 +119,16 @@ function Lib({ isOpen, onClose, onPdfSelect }: LibProps) {
                     <div onClick={(e) => e.stopPropagation()} className="flex flex-col w-[150px] justify-start gap-1 absolute right-2 top-11 z-50 bg-mist-900 cursor-pointer rounded-3xl px-2 py-3 shadow-xl">
 
                       <div 
-                        onClick={() => {const { data } = supabase.storage.from('pdfs').getPublicUrl(pdf.name); onPdfSelect(data.publicUrl); onClose()}}
+                        onClick={async () => {
+                          const { data } = await supabase.storage
+                            .from('pdfs')
+                            .createSignedUrl(`${userId}/${pdf.name}`, 3600) 
+                          if (data?.signedUrl) {
+                            onPdfSelect(data.signedUrl)
+                            onClose()
+                          }
+                        }}
+
                         className="flex items-center gap-2 hover:bg-slate-600 rounded-full py-1.5 px-3 duration-150">
 
                         <RiBookLine className="text-xl text-slate-200" />
@@ -127,10 +146,10 @@ function Lib({ isOpen, onClose, onPdfSelect }: LibProps) {
                       </div>
 
                       <div className="flex items-center gap-2 hover:bg-red-950 rounded-full py-1.5 px-3 duration-150" onClick={async () => {
-                          await supabase.storage.from('pdfs').remove([pdf.name])
-                          setPdfs((prev) => prev.filter((item) => item.name !== pdf.name))
-                          setLibMenuDisplay(null)
-                        }}>
+                            await supabase.storage.from('pdfs').remove([`${userId}/${pdf.name}`])
+                            setPdfs((prev) => prev.filter((item) => item.name !== pdf.name))
+                            setLibMenuDisplay(null)
+                          }}>
                         
                         <RiDeleteBinLine className="text-xl text-red-500" />
                         <p className="text-sm text-red-500">Excluir</p>

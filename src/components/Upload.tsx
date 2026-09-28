@@ -1,5 +1,5 @@
 import { RiCheckboxCircleLine, RiUploadLine } from 'react-icons/ri'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { supabase } from '../lib/supabase'
 
 interface UploadProps {
@@ -10,9 +10,14 @@ interface UploadProps {
 function Upload({ onUploadComplete }: UploadProps) {
 
   const [popup, setPopup] = useState(false)
+  const inputId = useId()
 
 {/*função de importar o pdf */}
 async function PdfUpload(file: File) {
+  // Pega o ID do usuário
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return
+
   {/*Aqui tratei o erro de upload por nome inválido */}
   {/* Mazin, tem q refazer essa função depois, pois fiz com IA para teste*/}
     {/* codigo IA removido*/}
@@ -34,7 +39,7 @@ async function PdfUpload(file: File) {
 
   await supabase.storage
     .from('pdfs')
-    .upload(nomeArquivo, file)
+    .upload(`${user.id}/${nomeArquivo}`, file)
 
   onUploadComplete?.()
   
@@ -45,7 +50,7 @@ async function PdfUpload(file: File) {
   return (
     <>
       {/* botão principal */}
-      <label className="mb-2 flex items-center justify-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 duration-150 px-8 py-2 cursor-pointer" htmlFor="pdf-upload">
+      <label className="mb-2 flex items-center justify-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 duration-150 px-8 py-2 cursor-pointer" htmlFor={inputId}>
         <div className="flex h-5 w-5 items-center justify-center">
           <RiUploadLine />
         </div>
@@ -54,7 +59,7 @@ async function PdfUpload(file: File) {
       </label>
 
      {/* Aqui eu coloquei pro pdf subir no budget public do supabase mas a gente PRECISA deixar privado depois do sistema de login */}
-      <input className="sr-only" id="pdf-upload" type="file" accept="application/pdf" 
+      <input className="sr-only" id={inputId} type="file" accept="application/pdf" 
         onChange={(e) => { 
           const file = e.target.files?.[0]
 
