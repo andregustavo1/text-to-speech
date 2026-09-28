@@ -1,4 +1,5 @@
 import { RiCloseLine, RiBookLine, RiSunLine, RiSettings3Line } from 'react-icons/ri'
+import { useState } from 'react'
 
 interface MenuProps {
   onClose?: () => void
@@ -56,10 +57,6 @@ function Menu({ onClose, onOpenLib }: MenuProps) {
             <p>Configurações</p>
           </div>
         </button>
-
-        <div className="absolute bottom-0 mb-20">
-          <p>Adicionar o componente Upload</p>
-        </div>
 
       </div>
     </div>

@@ -69,14 +69,14 @@ function PdfViewer({ pdfUrl, onMenuToggle }: PdfViewerProps) {
             ><RiArrowLeftSLine className="text-slate-200 text-xl" /></button>
 
             <div className="text-sm text-slate-300 gap-1 flex items-center">
-      <input
-        value={inputPage}
-        onChange={(e) => setInputPage(e.target.value)}
-        onBlur={indexPage}
-        onKeyDown={(e) => e.key === 'Enter' && indexPage()}
-        className="w-8 h-8 bg-transparent text-center text-white outline-none rounded-full hover:bg-slate-800 focus:bg-slate-800 cursor-pointer [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
-              <div>/</div>
-              <div className=''>{numPages ?? '--'}</div>
+              <input
+                value={inputPage}
+                onChange={(e) => setInputPage(e.target.value)}
+                onBlur={indexPage}
+                onKeyDown={(e) => e.key === 'Enter' && indexPage()}
+                className="w-8 h-8 bg-transparent text-center text-white outline-none rounded-full hover:bg-slate-800 focus:bg-slate-800 cursor-pointer [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                      <div>/</div>
+                      <div className=''>{numPages ?? '--'}</div>
             </div>
 
             <button 

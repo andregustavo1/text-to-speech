@@ -2,7 +2,12 @@ import { RiCheckboxCircleLine, RiUploadLine } from 'react-icons/ri'
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
-function Upload() {
+interface UploadProps {
+  onUploadComplete?: () => void
+}
+
+
+function Upload({ onUploadComplete }: UploadProps) {
 
   const [popup, setPopup] = useState(false)
 
@@ -31,6 +36,8 @@ async function PdfUpload(file: File) {
     .from('pdfs')
     .upload(nomeArquivo, file)
 
+  onUploadComplete?.()
+  
   setPopup(true)
   setTimeout(() => setPopup(false), 3500)
 }
@@ -38,7 +45,7 @@ async function PdfUpload(file: File) {
   return (
     <>
       {/* botão principal */}
-      <label className="mb-2 flex items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 duration-150 px-8 py-2 cursor-pointer" htmlFor="pdf-upload">
+      <label className="mb-2 flex items-center justify-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 duration-150 px-8 py-2 cursor-pointer" htmlFor="pdf-upload">
         <div className="flex h-5 w-5 items-center justify-center">
           <RiUploadLine />
         </div>
