@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  id="Definitions_EToSpeech"
+  targetNamespace="http://andregustavo1/text-to-speech/bpmn">
+
+  <bpmn:collaboration id="Collaboration_EToSpeech">
+    <bpmn:participant id="Participant_FluxoPrincipal" name="E-To-Speech (Fluxo Colaborativo Principal)" processRef="Processo_EToSpeech" />
+  </bpmn:collaboration>
+
+  <bpmn:process id="Processo_EToSpeech" name="Fluxos do sistema E-To-Speech" isExecutable="false">
+    <bpmn:documentation>Modelo inferido da branch entrega2809. O código observado implementa autenticação, importação, gestão e visualização de PDFs com Supabase Auth e Storage. A conversão de texto em voz não está explicitamente implementada no código analisado.</bpmn:documentation>
+
+    <bpmn:laneSet id="LaneSet_Principal">
+      <bpmn:lane id="Lane_Usuario" name="Usuário">
+        <bpmn:flowNodeRef>Start_AcessoInicial</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_User_AcessaApp</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_User_InformaCredenciais</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_User_PreencheCadastro</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_User_ConfirmaEmail</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_User_InformaEmailReset</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_User_DefineNovaSenha</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_User_AbreMenuBiblioteca</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_User_SelecionaArquivoPDF</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_User_SelecionaPDFAbrir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_User_InformaNovoNome</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_User_ConfirmaExclusao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_User_FechaBibliotecaMenu</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_FimFluxo</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_Frontend" name="Frontend React (App, ProtectedRoute, Login, Lib, Upload, Menu, PdfViewer)">
+        <bpmn:flowNodeRef>Task_FE_VerificaRotaProtegida</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_SessaoAtiva</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_RedirecionaLogin</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_ExibeTelaLogin</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_AcaoTelaLogin</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_CredenciaisValidas</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_ErroCredenciaisInvalidas</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_RedirecionaDestinoSeguro</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_SenhasConferem</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_ErroConfirmacaoSenha</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_ResetSenhaOk</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_ErroResetSenha</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_MergeAutenticado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_LiberaAplicacaoPrincipal</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_OperacaoBiblioteca</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_ArquivoSelecionado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_ErroArquivoNaoSelecionado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_NormalizaNomeArquivo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_UploadOk</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_ErroUploadOuStorage</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_AtualizaBibliotecaUpload</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_URLAssinadaOk</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_ErroStorageAbrir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_VisualizaPDF</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_MoveOk</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_ErroStorageRenomear</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_AtualizaBibliotecaRename</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_RemoveOk</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_ErroStorageExcluir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_AtualizaBibliotecaDelete</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FE_RetornaAplicacao</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_SupabaseAuth" name="Supabase Auth">
+        <bpmn:flowNodeRef>Task_Auth_ConsultaUsuarioAtual</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Auth_LoginComSenha</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Auth_CadastroSignUp</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Auth_SolicitaRecuperacaoSenha</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Auth_AtualizaSenha</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Auth_ObtemUsuarioUpload</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_SupabaseStorage" name="Supabase Storage (bucket pdfs por user.id)">
+        <bpmn:flowNodeRef>Task_Storage_UploadPDF</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Storage_ListaPDFsUsuario</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Storage_GeraURLAssinada3600</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Storage_MoveRenomear</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Storage_RemoveExcluir</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_Email" name="Serviço de E-mail">
+        <bpmn:flowNodeRef>Task_Email_EnviaConfirmacaoCadastro</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Email_EnviaLinkRecuperacao</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <bpmn:startEvent id="Start_AcessoInicial" name="Acesso inicial" />
+    <bpmn:task id="Task_User_AcessaApp" name="Usuário acessa /" />
+    <bpmn:task id="Task_FE_VerificaRotaProtegida" name="ProtectedRoute verifica sessão" />
+    <bpmn:task id="Task_Auth_ConsultaUsuarioAtual" name="Auth.getUser()" />
+    <bpmn:exclusiveGateway id="Gateway_SessaoAtiva" name="Sessão ativa?" />
+
+    <bpmn:task id="Task_FE_RedirecionaLogin" name="Redirecionar para /login" />
+    <bpmn:task id="Task_FE_ExibeTelaLogin" name="Exibir tela de login" />
+    <bpmn:exclusiveGateway id="Gateway_AcaoTelaLogin" name="Ação do usuário" />
+
+    <bpmn:task id="Task_User_InformaCredenciais" name="Informar e-mail e senha" />
+    <bpmn:task id="Task_Auth_LoginComSenha" name="signInWithPassword" />
+    <bpmn:exclusiveGateway id="Gateway_CredenciaisValidas" name="Credenciais válidas?" />
+    <bpmn:task id="Task_FE_ErroCredenciaisInvalidas" name="Exibir erro credenciais inválidas" />
+    <bpmn:task id="Task_FE_RedirecionaDestinoSeguro" name="Redirecionar para next seguro ou home" />
+
+    <bpmn:task id="Task_User_PreencheCadastro" name="Cadastro + confirmação de senha" />
+    <bpmn:exclusiveGateway id="Gateway_SenhasConferem" name="Senhas conferem?" />
+    <bpmn:task id="Task_FE_ErroConfirmacaoSenha" name="Exibir erro de confirmação" />
+    <bpmn:task id="Task_Auth_CadastroSignUp" name="signUp" />
+    <bpmn:task id="Task_Email_EnviaConfirmacaoCadastro" name="Enviar e-mail de confirmação" />
+    <bpmn:task id="Task_User_ConfirmaEmail" name="Confirmar e-mail cadastrado" />
+
+    <bpmn:task id="Task_User_InformaEmailReset" name="Informar e-mail para recuperação" />
+    <bpmn:task id="Task_Auth_SolicitaRecuperacaoSenha" name="resetPasswordForEmail" />
+    <bpmn:task id="Task_Email_EnviaLinkRecuperacao" name="Enviar link de redefinição" />
+    <bpmn:task id="Task_User_DefineNovaSenha" name="Abrir link e definir nova senha" />
+    <bpmn:task id="Task_Auth_AtualizaSenha" name="updateUser(password)" />
+    <bpmn:exclusiveGateway id="Gateway_ResetSenhaOk" name="Senha atualizada?" />
+    <bpmn:task id="Task_FE_ErroResetSenha" name="Exibir erro ao atualizar senha" />
+
+    <bpmn:exclusiveGateway id="Gateway_MergeAutenticado" name="Fluxo autenticado" />
+    <bpmn:task id="Task_FE_LiberaAplicacaoPrincipal" name="Liberar App principal" />
+    <bpmn:task id="Task_User_AbreMenuBiblioteca" name="Abrir menu lateral / biblioteca" />
+    <bpmn:exclusiveGateway id="Gateway_OperacaoBiblioteca" name="Operação da biblioteca" />
+
+    <bpmn:task id="Task_User_SelecionaArquivoPDF" name="Selecionar arquivo PDF" />
+    <bpmn:exclusiveGateway id="Gateway_ArquivoSelecionado" name="Arquivo selecionado?" />
+    <bpmn:task id="Task_FE_ErroArquivoNaoSelecionado" name="Exibir erro: arquivo não selecionado" />
+    <bpmn:task id="Task_Auth_ObtemUsuarioUpload" name="Obter usuário autenticado" />
+    <bpmn:task id="Task_FE_NormalizaNomeArquivo" name="Normalizar nome (acentos/especiais/espaços/lowercase)" />
+    <bpmn:task id="Task_Storage_UploadPDF" name="Upload para pdfs/${user.id}/${nomeArquivo}" />
+    <bpmn:exclusiveGateway id="Gateway_UploadOk" name="Upload/Storage OK?" />
+    <bpmn:task id="Task_FE_ErroUploadOuStorage" name="Exibir erro de upload/storage" />
+    <bpmn:task id="Task_FE_AtualizaBibliotecaUpload" name="Atualizar biblioteca após upload" />
+
+    <bpmn:task id="Task_Storage_ListaPDFsUsuario" name="Listar PDFs do usuário" />
+    <bpmn:task id="Task_User_SelecionaPDFAbrir" name="Selecionar PDF para abrir" />
+    <bpmn:task id="Task_Storage_GeraURLAssinada3600" name="createSignedUrl(3600)" />
+    <bpmn:exclusiveGateway id="Gateway_URLAssinadaOk" name="URL assinada gerada?" />
+    <bpmn:task id="Task_FE_ErroStorageAbrir" name="Exibir erro de operação de storage" />
+    <bpmn:task id="Task_FE_VisualizaPDF" name="Visualizar PDF no PdfViewer" />
+
+    <bpmn:task id="Task_User_InformaNovoNome" name="Informar novo nome do PDF" />
+    <bpmn:task id="Task_Storage_MoveRenomear" name="Renomear com move" />
+    <bpmn:exclusiveGateway id="Gateway_MoveOk" name="Renomear OK?" />
+    <bpmn:task id="Task_FE_ErroStorageRenomear" name="Exibir erro ao renomear" />
+    <bpmn:task id="Task_FE_AtualizaBibliotecaRename" name="Atualizar biblioteca após renomear" />
+
+    <bpmn:task id="Task_User_ConfirmaExclusao" name="Confirmar exclusão" />
+    <bpmn:task id="Task_Storage_RemoveExcluir" name="Excluir com remove" />
+    <bpmn:exclusiveGateway id="Gateway_RemoveOk" name="Excluir OK?" />
+    <bpmn:task id="Task_FE_ErroStorageExcluir" name="Exibir erro ao excluir" />
+    <bpmn:task id="Task_FE_AtualizaBibliotecaDelete" name="Atualizar biblioteca após excluir" />
+
+    <bpmn:task id="Task_User_FechaBibliotecaMenu" name="Fechar biblioteca/menu" />
+    <bpmn:task id="Task_FE_RetornaAplicacao" name="Retornar à aplicação" />
+    <bpmn:endEvent id="End_FimFluxo" name="Fim da navegação" />
+
+    <bpmn:sequenceFlow id="Flow_01" sourceRef="Start_AcessoInicial" targetRef="Task_User_AcessaApp" />
+    <bpmn:sequenceFlow id="Flow_02" sourceRef="Task_User_AcessaApp" targetRef="Task_FE_VerificaRotaProtegida" />
+    <bpmn:sequenceFlow id="Flow_03" sourceRef="Task_FE_VerificaRotaProtegida" targetRef="Task_Auth_ConsultaUsuarioAtual" />
+    <bpmn:sequenceFlow id="Flow_04" sourceRef="Task_Auth_ConsultaUsuarioAtual" targetRef="Gateway_SessaoAtiva" />
+    <bpmn:sequenceFlow id="Flow_05" sourceRef="Gateway_SessaoAtiva" targetRef="Gateway_MergeAutenticado" name="Sim" />
+    <bpmn:sequenceFlow id="Flow_06" sourceRef="Gateway_SessaoAtiva" targetRef="Task_FE_RedirecionaLogin" name="Não" />
+
+    <bpmn:sequenceFlow id="Flow_07" sourceRef="Task_FE_RedirecionaLogin" targetRef="Task_FE_ExibeTelaLogin" />
+    <bpmn:sequenceFlow id="Flow_08" sourceRef="Task_FE_ExibeTelaLogin" targetRef="Gateway_AcaoTelaLogin" />
+
+    <bpmn:sequenceFlow id="Flow_09" sourceRef="Gateway_AcaoTelaLogin" targetRef="Task_User_InformaCredenciais" name="Login" />
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="Task_User_InformaCredenciais" targetRef="Task_Auth_LoginComSenha" />
+    <bpmn:sequenceFlow id="Flow_11" sourceRef="Task_Auth_LoginComSenha" targetRef="Gateway_CredenciaisValidas" />
+    <bpmn:sequenceFlow id="Flow_12" sourceRef="Gateway_CredenciaisValidas" targetRef="Task_FE_RedirecionaDestinoSeguro" name="Sim" />
+    <bpmn:sequenceFlow id="Flow_13" sourceRef="Gateway_CredenciaisValidas" targetRef="Task_FE_ErroCredenciaisInvalidas" name="Não" />
+    <bpmn:sequenceFlow id="Flow_14" sourceRef="Task_FE_ErroCredenciaisInvalidas" targetRef="Task_User_InformaCredenciais" />
+    <bpmn:sequenceFlow id="Flow_15" sourceRef="Task_FE_RedirecionaDestinoSeguro" targetRef="Gateway_MergeAutenticado" />
+
+    <bpmn:sequenceFlow id="Flow_16" sourceRef="Gateway_AcaoTelaLogin" targetRef="Task_User_PreencheCadastro" name="Cadastro" />
+    <bpmn:sequenceFlow id="Flow_17" sourceRef="Task_User_PreencheCadastro" targetRef="Gateway_SenhasConferem" />
+    <bpmn:sequenceFlow id="Flow_18" sourceRef="Gateway_SenhasConferem" targetRef="Task_FE_ErroConfirmacaoSenha" name="Não" />
+    <bpmn:sequenceFlow id="Flow_19" sourceRef="Task_FE_ErroConfirmacaoSenha" targetRef="Task_User_PreencheCadastro" />
+    <bpmn:sequenceFlow id="Flow_20" sourceRef="Gateway_SenhasConferem" targetRef="Task_Auth_CadastroSignUp" name="Sim" />
+    <bpmn:sequenceFlow id="Flow_21" sourceRef="Task_Auth_CadastroSignUp" targetRef="Task_Email_EnviaConfirmacaoCadastro" />
+    <bpmn:sequenceFlow id="Flow_22" sourceRef="Task_Email_EnviaConfirmacaoCadastro" targetRef="Task_User_ConfirmaEmail" />
+    <bpmn:sequenceFlow id="Flow_23" sourceRef="Task_User_ConfirmaEmail" targetRef="Task_FE_ExibeTelaLogin" />
+
+    <bpmn:sequenceFlow id="Flow_24" sourceRef="Gateway_AcaoTelaLogin" targetRef="Task_User_InformaEmailReset" name="Recuperar senha" />
+    <bpmn:sequenceFlow id="Flow_25" sourceRef="Task_User_InformaEmailReset" targetRef="Task_Auth_SolicitaRecuperacaoSenha" />
+    <bpmn:sequenceFlow id="Flow_26" sourceRef="Task_Auth_SolicitaRecuperacaoSenha" targetRef="Task_Email_EnviaLinkRecuperacao" />
+    <bpmn:sequenceFlow id="Flow_27" sourceRef="Task_Email_EnviaLinkRecuperacao" targetRef="Task_User_DefineNovaSenha" />
+    <bpmn:sequenceFlow id="Flow_28" sourceRef="Task_User_DefineNovaSenha" targetRef="Task_Auth_AtualizaSenha" />
+    <bpmn:sequenceFlow id="Flow_29" sourceRef="Task_Auth_AtualizaSenha" targetRef="Gateway_ResetSenhaOk" />
+    <bpmn:sequenceFlow id="Flow_30" sourceRef="Gateway_ResetSenhaOk" targetRef="Gateway_MergeAutenticado" name="Sim" />
+    <bpmn:sequenceFlow id="Flow_31" sourceRef="Gateway_ResetSenhaOk" targetRef="Task_FE_ErroResetSenha" name="Não" />
+    <bpmn:sequenceFlow id="Flow_32" sourceRef="Task_FE_ErroResetSenha" targetRef="Task_User_DefineNovaSenha" />
+
+    <bpmn:sequenceFlow id="Flow_33" sourceRef="Gateway_MergeAutenticado" targetRef="Task_FE_LiberaAplicacaoPrincipal" />
+    <bpmn:sequenceFlow id="Flow_34" sourceRef="Task_FE_LiberaAplicacaoPrincipal" targetRef="Task_User_AbreMenuBiblioteca" />
+    <bpmn:sequenceFlow id="Flow_35" sourceRef="Task_User_AbreMenuBiblioteca" targetRef="Gateway_OperacaoBiblioteca" />
+
+    <bpmn:sequenceFlow id="Flow_36" sourceRef="Gateway_OperacaoBiblioteca" targetRef="Task_User_SelecionaArquivoPDF" name="Upload" />
+    <bpmn:sequenceFlow id="Flow_37" sourceRef="Task_User_SelecionaArquivoPDF" targetRef="Gateway_ArquivoSelecionado" />
+    <bpmn:sequenceFlow id="Flow_38" sourceRef="Gateway_ArquivoSelecionado" targetRef="Task_FE_ErroArquivoNaoSelecionado" name="Não" />
+    <bpmn:sequenceFlow id="Flow_39" sourceRef="Task_FE_ErroArquivoNaoSelecionado" targetRef="Gateway_OperacaoBiblioteca" />
+    <bpmn:sequenceFlow id="Flow_40" sourceRef="Gateway_ArquivoSelecionado" targetRef="Task_Auth_ObtemUsuarioUpload" name="Sim" />
+    <bpmn:sequenceFlow id="Flow_41" sourceRef="Task_Auth_ObtemUsuarioUpload" targetRef="Task_FE_NormalizaNomeArquivo" />
+    <bpmn:sequenceFlow id="Flow_42" sourceRef="Task_FE_NormalizaNomeArquivo" targetRef="Task_Storage_UploadPDF" />
+    <bpmn:sequenceFlow id="Flow_43" sourceRef="Task_Storage_UploadPDF" targetRef="Gateway_UploadOk" />
+    <bpmn:sequenceFlow id="Flow_44" sourceRef="Gateway_UploadOk" targetRef="Task_FE_ErroUploadOuStorage" name="Não" />
+    <bpmn:sequenceFlow id="Flow_45" sourceRef="Task_FE_ErroUploadOuStorage" targetRef="Gateway_OperacaoBiblioteca" />
+    <bpmn:sequenceFlow id="Flow_46" sourceRef="Gateway_UploadOk" targetRef="Task_FE_AtualizaBibliotecaUpload" name="Sim" />
+    <bpmn:sequenceFlow id="Flow_47" sourceRef="Task_FE_AtualizaBibliotecaUpload" targetRef="Gateway_OperacaoBiblioteca" />
+
+    <bpmn:sequenceFlow id="Flow_48" sourceRef="Gateway_OperacaoBiblioteca" targetRef="Task_Storage_ListaPDFsUsuario" name="Abrir" />
+    <bpmn:sequenceFlow id="Flow_49" sourceRef="Task_Storage_ListaPDFsUsuario" targetRef="Task_User_SelecionaPDFAbrir" />
+    <bpmn:sequenceFlow id="Flow_50" sourceRef="Task_User_SelecionaPDFAbrir" targetRef="Task_Storage_GeraURLAssinada3600" />
+    <bpmn:sequenceFlow id="Flow_51" sourceRef="Task_Storage_GeraURLAssinada3600" targetRef="Gateway_URLAssinadaOk" />
+    <bpmn:sequenceFlow id="Flow_52" sourceRef="Gateway_URLAssinadaOk" targetRef="Task_FE_VisualizaPDF" name="Sim" />
+    <bpmn:sequenceFlow id="Flow_53" sourceRef="Gateway_URLAssinadaOk" targetRef="Task_FE_ErroStorageAbrir" name="Não" />
+    <bpmn:sequenceFlow id="Flow_54" sourceRef="Task_FE_ErroStorageAbrir" targetRef="Gateway_OperacaoBiblioteca" />
+    <bpmn:sequenceFlow id="Flow_55" sourceRef="Task_FE_VisualizaPDF" targetRef="Gateway_OperacaoBiblioteca" />
+
+    <bpmn:sequenceFlow id="Flow_56" sourceRef="Gateway_OperacaoBiblioteca" targetRef="Task_User_InformaNovoNome" name="Renomear" />
+    <bpmn:sequenceFlow id="Flow_57" sourceRef="Task_User_InformaNovoNome" targetRef="Task_Storage_MoveRenomear" />
+    <bpmn:sequenceFlow id="Flow_58" sourceRef="Task_Storage_MoveRenomear" targetRef="Gateway_MoveOk" />
+    <bpmn:sequenceFlow id="Flow_59" sourceRef="Gateway_MoveOk" targetRef="Task_FE_ErroStorageRenomear" name="Não" />
+    <bpmn:sequenceFlow id="Flow_60" sourceRef="Task_FE_ErroStorageRenomear" targetRef="Gateway_OperacaoBiblioteca" />
+    <bpmn:sequenceFlow id="Flow_61" sourceRef="Gateway_MoveOk" targetRef="Task_FE_AtualizaBibliotecaRename" name="Sim" />
+    <bpmn:sequenceFlow id="Flow_62" sourceRef="Task_FE_AtualizaBibliotecaRename" targetRef="Gateway_OperacaoBiblioteca" />
+
+    <bpmn:sequenceFlow id="Flow_63" sourceRef="Gateway_OperacaoBiblioteca" targetRef="Task_User_ConfirmaExclusao" name="Excluir" />
+    <bpmn:sequenceFlow id="Flow_64" sourceRef="Task_User_ConfirmaExclusao" targetRef="Task_Storage_RemoveExcluir" />
+    <bpmn:sequenceFlow id="Flow_65" sourceRef="Task_Storage_RemoveExcluir" targetRef="Gateway_RemoveOk" />
+    <bpmn:sequenceFlow id="Flow_66" sourceRef="Gateway_RemoveOk" targetRef="Task_FE_ErroStorageExcluir" name="Não" />
+    <bpmn:sequenceFlow id="Flow_67" sourceRef="Task_FE_ErroStorageExcluir" targetRef="Gateway_OperacaoBiblioteca" />
+    <bpmn:sequenceFlow id="Flow_68" sourceRef="Gateway_RemoveOk" targetRef="Task_FE_AtualizaBibliotecaDelete" name="Sim" />
+    <bpmn:sequenceFlow id="Flow_69" sourceRef="Task_FE_AtualizaBibliotecaDelete" targetRef="Gateway_OperacaoBiblioteca" />
+
+    <bpmn:sequenceFlow id="Flow_70" sourceRef="Gateway_OperacaoBiblioteca" targetRef="Task_User_FechaBibliotecaMenu" name="Fechar/retornar" />
+    <bpmn:sequenceFlow id="Flow_71" sourceRef="Task_User_FechaBibliotecaMenu" targetRef="Task_FE_RetornaAplicacao" />
+    <bpmn:sequenceFlow id="Flow_72" sourceRef="Task_FE_RetornaAplicacao" targetRef="End_FimFluxo" />
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_EToSpeech">
+    <bpmndi:BPMNPlane id="BPMNPlane_EToSpeech" bpmnElement="Collaboration_EToSpeech">
+      <bpmndi:BPMNShape id="Shape_Participant" bpmnElement="Participant_FluxoPrincipal" isHorizontal="true">
+        <dc:Bounds x="80" y="80" width="5200" height="900" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Lane_Usuario" bpmnElement="Lane_Usuario" isHorizontal="true"><dc:Bounds x="110" y="120" width="5170" height="140" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Frontend" bpmnElement="Lane_Frontend" isHorizontal="true"><dc:Bounds x="110" y="260" width="5170" height="180" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Auth" bpmnElement="Lane_SupabaseAuth" isHorizontal="true"><dc:Bounds x="110" y="440" width="5170" height="140" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Storage" bpmnElement="Lane_SupabaseStorage" isHorizontal="true"><dc:Bounds x="110" y="580" width="5170" height="140" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Email" bpmnElement="Lane_Email" isHorizontal="true"><dc:Bounds x="110" y="720" width="5170" height="140" /></bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Start_AcessoInicial" bpmnElement="Start_AcessoInicial"><dc:Bounds x="150" y="170" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_User_AcessaApp" bpmnElement="Task_User_AcessaApp"><dc:Bounds x="230" y="150" width="150" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_VerificaRotaProtegida" bpmnElement="Task_FE_VerificaRotaProtegida"><dc:Bounds x="430" y="310" width="180" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Auth_ConsultaUsuarioAtual" bpmnElement="Task_Auth_ConsultaUsuarioAtual"><dc:Bounds x="660" y="470" width="160" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway_SessaoAtiva" bpmnElement="Gateway_SessaoAtiva" isMarkerVisible="true"><dc:Bounds x="870" y="330" width="50" height="50" /></bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_FE_RedirecionaLogin" bpmnElement="Task_FE_RedirecionaLogin"><dc:Bounds x="960" y="310" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_ExibeTelaLogin" bpmnElement="Task_FE_ExibeTelaLogin"><dc:Bounds x="1180" y="310" width="160" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway_AcaoTelaLogin" bpmnElement="Gateway_AcaoTelaLogin" isMarkerVisible="true"><dc:Bounds x="1380" y="330" width="50" height="50" /></bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_User_InformaCredenciais" bpmnElement="Task_User_InformaCredenciais"><dc:Bounds x="1500" y="150" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Auth_LoginComSenha" bpmnElement="Task_Auth_LoginComSenha"><dc:Bounds x="1710" y="470" width="160" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway_CredenciaisValidas" bpmnElement="Gateway_CredenciaisValidas" isMarkerVisible="true"><dc:Bounds x="1910" y="330" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_ErroCredenciaisInvalidas" bpmnElement="Task_FE_ErroCredenciaisInvalidas"><dc:Bounds x="2000" y="310" width="190" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_RedirecionaDestinoSeguro" bpmnElement="Task_FE_RedirecionaDestinoSeguro"><dc:Bounds x="2000" y="220" width="190" height="80" /></bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_User_PreencheCadastro" bpmnElement="Task_User_PreencheCadastro"><dc:Bounds x="1500" y="60" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway_SenhasConferem" bpmnElement="Gateway_SenhasConferem" isMarkerVisible="true"><dc:Bounds x="1710" y="80" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_ErroConfirmacaoSenha" bpmnElement="Task_FE_ErroConfirmacaoSenha"><dc:Bounds x="1800" y="220" width="180" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Auth_CadastroSignUp" bpmnElement="Task_Auth_CadastroSignUp"><dc:Bounds x="1800" y="470" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Email_EnviaConfirmacaoCadastro" bpmnElement="Task_Email_EnviaConfirmacaoCadastro"><dc:Bounds x="2010" y="750" width="180" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_User_ConfirmaEmail" bpmnElement="Task_User_ConfirmaEmail"><dc:Bounds x="2230" y="60" width="170" height="80" /></bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_User_InformaEmailReset" bpmnElement="Task_User_InformaEmailReset"><dc:Bounds x="1500" y="230" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Auth_SolicitaRecuperacaoSenha" bpmnElement="Task_Auth_SolicitaRecuperacaoSenha"><dc:Bounds x="1710" y="560" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Email_EnviaLinkRecuperacao" bpmnElement="Task_Email_EnviaLinkRecuperacao"><dc:Bounds x="1915" y="750" width="180" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_User_DefineNovaSenha" bpmnElement="Task_User_DefineNovaSenha"><dc:Bounds x="2130" y="230" width="180" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Auth_AtualizaSenha" bpmnElement="Task_Auth_AtualizaSenha"><dc:Bounds x="2350" y="560" width="160" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway_ResetSenhaOk" bpmnElement="Gateway_ResetSenhaOk" isMarkerVisible="true"><dc:Bounds x="2550" y="330" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_ErroResetSenha" bpmnElement="Task_FE_ErroResetSenha"><dc:Bounds x="2640" y="310" width="170" height="80" /></bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Gateway_MergeAutenticado" bpmnElement="Gateway_MergeAutenticado" isMarkerVisible="true"><dc:Bounds x="2800" y="330" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_LiberaAplicacaoPrincipal" bpmnElement="Task_FE_LiberaAplicacaoPrincipal"><dc:Bounds x="2890" y="310" width="180" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_User_AbreMenuBiblioteca" bpmnElement="Task_User_AbreMenuBiblioteca"><dc:Bounds x="3120" y="150" width="180" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway_OperacaoBiblioteca" bpmnElement="Gateway_OperacaoBiblioteca" isMarkerVisible="true"><dc:Bounds x="3350" y="330" width="50" height="50" /></bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_User_SelecionaArquivoPDF" bpmnElement="Task_User_SelecionaArquivoPDF"><dc:Bounds x="3480" y="60" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway_ArquivoSelecionado" bpmnElement="Gateway_ArquivoSelecionado" isMarkerVisible="true"><dc:Bounds x="3680" y="80" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_ErroArquivoNaoSelecionado" bpmnElement="Task_FE_ErroArquivoNaoSelecionado"><dc:Bounds x="3780" y="220" width="190" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Auth_ObtemUsuarioUpload" bpmnElement="Task_Auth_ObtemUsuarioUpload"><dc:Bounds x="3780" y="470" width="180" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_NormalizaNomeArquivo" bpmnElement="Task_FE_NormalizaNomeArquivo"><dc:Bounds x="4000" y="310" width="210" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Storage_UploadPDF" bpmnElement="Task_Storage_UploadPDF"><dc:Bounds x="4250" y="610" width="180" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway_UploadOk" bpmnElement="Gateway_UploadOk" isMarkerVisible="true"><dc:Bounds x="4470" y="330" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_ErroUploadOuStorage" bpmnElement="Task_FE_ErroUploadOuStorage"><dc:Bounds x="4560" y="310" width="180" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_AtualizaBibliotecaUpload" bpmnElement="Task_FE_AtualizaBibliotecaUpload"><dc:Bounds x="4560" y="220" width="190" height="80" /></bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_Storage_ListaPDFsUsuario" bpmnElement="Task_Storage_ListaPDFsUsuario"><dc:Bounds x="3480" y="610" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_User_SelecionaPDFAbrir" bpmnElement="Task_User_SelecionaPDFAbrir"><dc:Bounds x="3700" y="150" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Storage_GeraURLAssinada3600" bpmnElement="Task_Storage_GeraURLAssinada3600"><dc:Bounds x="3920" y="610" width="180" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway_URLAssinadaOk" bpmnElement="Gateway_URLAssinadaOk" isMarkerVisible="true"><dc:Bounds x="4140" y="330" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_ErroStorageAbrir" bpmnElement="Task_FE_ErroStorageAbrir"><dc:Bounds x="4230" y="310" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_VisualizaPDF" bpmnElement="Task_FE_VisualizaPDF"><dc:Bounds x="4230" y="220" width="160" height="80" /></bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_User_InformaNovoNome" bpmnElement="Task_User_InformaNovoNome"><dc:Bounds x="3480" y="230" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Storage_MoveRenomear" bpmnElement="Task_Storage_MoveRenomear"><dc:Bounds x="3700" y="610" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway_MoveOk" bpmnElement="Gateway_MoveOk" isMarkerVisible="true"><dc:Bounds x="3920" y="330" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_ErroStorageRenomear" bpmnElement="Task_FE_ErroStorageRenomear"><dc:Bounds x="4010" y="310" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_AtualizaBibliotecaRename" bpmnElement="Task_FE_AtualizaBibliotecaRename"><dc:Bounds x="4010" y="220" width="180" height="80" /></bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_User_ConfirmaExclusao" bpmnElement="Task_User_ConfirmaExclusao"><dc:Bounds x="3480" y="320" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Storage_RemoveExcluir" bpmnElement="Task_Storage_RemoveExcluir"><dc:Bounds x="3700" y="610" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway_RemoveOk" bpmnElement="Gateway_RemoveOk" isMarkerVisible="true"><dc:Bounds x="3920" y="420" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_ErroStorageExcluir" bpmnElement="Task_FE_ErroStorageExcluir"><dc:Bounds x="4010" y="400" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_AtualizaBibliotecaDelete" bpmnElement="Task_FE_AtualizaBibliotecaDelete"><dc:Bounds x="4010" y="490" width="180" height="80" /></bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_User_FechaBibliotecaMenu" bpmnElement="Task_User_FechaBibliotecaMenu"><dc:Bounds x="3480" y="150" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FE_RetornaAplicacao" bpmnElement="Task_FE_RetornaAplicacao"><dc:Bounds x="3700" y="310" width="170" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_End_FimFluxo" bpmnElement="End_FimFluxo"><dc:Bounds x="3920" y="170" width="36" height="36" /></bpmndi:BPMNShape>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_01" bpmnElement="Flow_01"><di:waypoint x="186" y="188" /><di:waypoint x="230" y="188" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_02" bpmnElement="Flow_02"><di:waypoint x="380" y="188" /><di:waypoint x="430" y="350" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_03" bpmnElement="Flow_03"><di:waypoint x="610" y="350" /><di:waypoint x="660" y="510" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_04" bpmnElement="Flow_04"><di:waypoint x="820" y="510" /><di:waypoint x="895" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_05" bpmnElement="Flow_05"><di:waypoint x="920" y="355" /><di:waypoint x="2825" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_06" bpmnElement="Flow_06"><di:waypoint x="920" y="355" /><di:waypoint x="960" y="350" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_07" bpmnElement="Flow_07"><di:waypoint x="1130" y="350" /><di:waypoint x="1180" y="350" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_08" bpmnElement="Flow_08"><di:waypoint x="1340" y="350" /><di:waypoint x="1380" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_09" bpmnElement="Flow_09"><di:waypoint x="1430" y="355" /><di:waypoint x="1500" y="190" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_10" bpmnElement="Flow_10"><di:waypoint x="1670" y="190" /><di:waypoint x="1710" y="510" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_11" bpmnElement="Flow_11"><di:waypoint x="1870" y="510" /><di:waypoint x="1935" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_12" bpmnElement="Flow_12"><di:waypoint x="1960" y="355" /><di:waypoint x="2000" y="260" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_13" bpmnElement="Flow_13"><di:waypoint x="1960" y="355" /><di:waypoint x="2000" y="350" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_14" bpmnElement="Flow_14"><di:waypoint x="2000" y="350" /><di:waypoint x="1585" y="230" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_15" bpmnElement="Flow_15"><di:waypoint x="2190" y="260" /><di:waypoint x="2825" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_16" bpmnElement="Flow_16"><di:waypoint x="1430" y="355" /><di:waypoint x="1500" y="100" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_17" bpmnElement="Flow_17"><di:waypoint x="1670" y="100" /><di:waypoint x="1710" y="105" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_18" bpmnElement="Flow_18"><di:waypoint x="1735" y="130" /><di:waypoint x="1800" y="260" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_19" bpmnElement="Flow_19"><di:waypoint x="1800" y="260" /><di:waypoint x="1585" y="140" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_20" bpmnElement="Flow_20"><di:waypoint x="1760" y="105" /><di:waypoint x="1800" y="510" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_21" bpmnElement="Flow_21"><di:waypoint x="1970" y="510" /><di:waypoint x="2010" y="790" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_22" bpmnElement="Flow_22"><di:waypoint x="2190" y="790" /><di:waypoint x="2230" y="100" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_23" bpmnElement="Flow_23"><di:waypoint x="2400" y="100" /><di:waypoint x="1260" y="310" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_24" bpmnElement="Flow_24"><di:waypoint x="1430" y="355" /><di:waypoint x="1500" y="270" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_25" bpmnElement="Flow_25"><di:waypoint x="1670" y="270" /><di:waypoint x="1710" y="600" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_26" bpmnElement="Flow_26"><di:waypoint x="1880" y="600" /><di:waypoint x="1915" y="790" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_27" bpmnElement="Flow_27"><di:waypoint x="2095" y="790" /><di:waypoint x="2130" y="270" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_28" bpmnElement="Flow_28"><di:waypoint x="2310" y="270" /><di:waypoint x="2350" y="600" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_29" bpmnElement="Flow_29"><di:waypoint x="2510" y="600" /><di:waypoint x="2575" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_30" bpmnElement="Flow_30"><di:waypoint x="2600" y="355" /><di:waypoint x="2825" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_31" bpmnElement="Flow_31"><di:waypoint x="2600" y="355" /><di:waypoint x="2640" y="350" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_32" bpmnElement="Flow_32"><di:waypoint x="2640" y="350" /><di:waypoint x="2220" y="310" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_33" bpmnElement="Flow_33"><di:waypoint x="2850" y="355" /><di:waypoint x="2890" y="350" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_34" bpmnElement="Flow_34"><di:waypoint x="3070" y="350" /><di:waypoint x="3120" y="190" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_35" bpmnElement="Flow_35"><di:waypoint x="3300" y="190" /><di:waypoint x="3375" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_36" bpmnElement="Flow_36"><di:waypoint x="3400" y="355" /><di:waypoint x="3480" y="100" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_37" bpmnElement="Flow_37"><di:waypoint x="3650" y="100" /><di:waypoint x="3680" y="105" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_38" bpmnElement="Flow_38"><di:waypoint x="3730" y="105" /><di:waypoint x="3780" y="260" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_39" bpmnElement="Flow_39"><di:waypoint x="3780" y="260" /><di:waypoint x="3375" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_40" bpmnElement="Flow_40"><di:waypoint x="3730" y="105" /><di:waypoint x="3780" y="510" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_41" bpmnElement="Flow_41"><di:waypoint x="3960" y="510" /><di:waypoint x="4000" y="350" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_42" bpmnElement="Flow_42"><di:waypoint x="4210" y="350" /><di:waypoint x="4250" y="650" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_43" bpmnElement="Flow_43"><di:waypoint x="4430" y="650" /><di:waypoint x="4495" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_44" bpmnElement="Flow_44"><di:waypoint x="4520" y="355" /><di:waypoint x="4560" y="350" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_45" bpmnElement="Flow_45"><di:waypoint x="4560" y="350" /><di:waypoint x="3375" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_46" bpmnElement="Flow_46"><di:waypoint x="4520" y="355" /><di:waypoint x="4560" y="260" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_47" bpmnElement="Flow_47"><di:waypoint x="4750" y="260" /><di:waypoint x="3375" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_48" bpmnElement="Flow_48"><di:waypoint x="3400" y="355" /><di:waypoint x="3480" y="650" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_49" bpmnElement="Flow_49"><di:waypoint x="3650" y="650" /><di:waypoint x="3700" y="190" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_50" bpmnElement="Flow_50"><di:waypoint x="3870" y="190" /><di:waypoint x="3920" y="650" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_51" bpmnElement="Flow_51"><di:waypoint x="4100" y="650" /><di:waypoint x="4165" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_52" bpmnElement="Flow_52"><di:waypoint x="4190" y="355" /><di:waypoint x="4230" y="260" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_53" bpmnElement="Flow_53"><di:waypoint x="4190" y="355" /><di:waypoint x="4230" y="350" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_54" bpmnElement="Flow_54"><di:waypoint x="4230" y="350" /><di:waypoint x="3375" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_55" bpmnElement="Flow_55"><di:waypoint x="4390" y="260" /><di:waypoint x="3375" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_56" bpmnElement="Flow_56"><di:waypoint x="3400" y="355" /><di:waypoint x="3480" y="270" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_57" bpmnElement="Flow_57"><di:waypoint x="3650" y="270" /><di:waypoint x="3700" y="650" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_58" bpmnElement="Flow_58"><di:waypoint x="3870" y="650" /><di:waypoint x="3945" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_59" bpmnElement="Flow_59"><di:waypoint x="3970" y="355" /><di:waypoint x="4010" y="350" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_60" bpmnElement="Flow_60"><di:waypoint x="4010" y="350" /><di:waypoint x="3375" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_61" bpmnElement="Flow_61"><di:waypoint x="3970" y="355" /><di:waypoint x="4010" y="260" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_62" bpmnElement="Flow_62"><di:waypoint x="4190" y="260" /><di:waypoint x="3375" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_63" bpmnElement="Flow_63"><di:waypoint x="3400" y="355" /><di:waypoint x="3480" y="360" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_64" bpmnElement="Flow_64"><di:waypoint x="3650" y="360" /><di:waypoint x="3700" y="650" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_65" bpmnElement="Flow_65"><di:waypoint x="3870" y="650" /><di:waypoint x="3945" y="445" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_66" bpmnElement="Flow_66"><di:waypoint x="3970" y="445" /><di:waypoint x="4010" y="440" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_67" bpmnElement="Flow_67"><di:waypoint x="4010" y="440" /><di:waypoint x="3375" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_68" bpmnElement="Flow_68"><di:waypoint x="3970" y="445" /><di:waypoint x="4010" y="530" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_69" bpmnElement="Flow_69"><di:waypoint x="4190" y="530" /><di:waypoint x="3375" y="355" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_70" bpmnElement="Flow_70"><di:waypoint x="3400" y="355" /><di:waypoint x="3480" y="190" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_71" bpmnElement="Flow_71"><di:waypoint x="3650" y="190" /><di:waypoint x="3700" y="350" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_72" bpmnElement="Flow_72"><di:waypoint x="3870" y="350" /><di:waypoint x="3938" y="188" /></bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
