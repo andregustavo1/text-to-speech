@@ -78,6 +78,100 @@ describe('API /api/ocr e /api/tts', () => {
     assert.deepEqual(res.body, { error: 'API key not valid.' })
   })
 
+  it('deveRetornar400ComMensagemQuandoOcrSemImagem', async () => {
+    const res = await request(app)
+      .post('/api/ocr')
+      .set('Authorization', 'Bearer token-valido')
+      .send({})
+
+    assert.equal(res.status, 400)
+    assert.deepEqual(res.body, { error: 'Imagem obrigatória' })
+    assert.equal(googleFetch.mock.callCount(), 0)
+  })
+
+  it('deveRetornar401SemChamarGoogleQuandoOcrSemToken', async () => {
+    const res = await request(app).post('/api/ocr').send({ image: 'aW1hZ2Vt' })
+
+    assert.equal(res.status, 401)
+    assert.deepEqual(res.body, { error: 'Não autenticado' })
+    assert.equal(googleFetch.mock.callCount(), 0)
+  })
+
+  it('deveRetornar500ComMensagemQuandoGoogleRecusaAImagem', async () => {
+    googleFetch.mock.mockImplementation(async () => ({
+      ok: true,
+      json: async () => ({ responses: [{ error: { message: 'Imagem corrompida.' } }] }),
+    }))
+
+    const res = await request(app)
+      .post('/api/ocr')
+      .set('Authorization', 'Bearer token-valido')
+      .send({ image: 'aW1hZ2Vt' })
+
+    assert.equal(res.status, 500)
+    assert.deepEqual(res.body, { error: 'Imagem corrompida.' })
+  })
+
+  it('deveRetornar200ComTextoVazioQuandoNaoHaTextoNaImagem', async () => {
+    googleFetch.mock.mockImplementation(async () => ({
+      ok: true,
+      json: async () => ({ responses: [{}] }),
+    }))
+
+    const res = await request(app)
+      .post('/api/ocr')
+      .set('Authorization', 'Bearer token-valido')
+      .send({ image: 'aW1hZ2Vt' })
+
+    assert.equal(res.status, 200)
+    assert.deepEqual(res.body, { text: '' })
+  })
+
+  it('deveRetornar200ComAudioMpegQuandoTextoValido', async () => {
+    const res = await request(app)
+      .post('/api/tts')
+      .set('Authorization', 'Bearer token-valido')
+      .send({ text: 'Olá, mundo.' })
+
+    assert.equal(res.status, 200)
+    assert.match(res.headers['content-type'], /audio\/mpeg/)
+    assert.equal(res.body.toString(), 'MP3')
+    assert.equal(googleFetch.mock.callCount(), 1)
+  })
+
+  it('deveRetornar400ComMensagemQuandoTextoMuitoGrande', async () => {
+    const res = await request(app)
+      .post('/api/tts')
+      .set('Authorization', 'Bearer token-valido')
+      .send({ text: 'a'.repeat(20001) })
+
+    assert.equal(res.status, 400)
+    assert.deepEqual(res.body, { error: 'Texto muito grande' })
+    assert.equal(googleFetch.mock.callCount(), 0)
+  })
+
+  it('deveRetornar401SemChamarGoogleQuandoTokenInvalido', async () => {
+    const res = await request(app)
+      .post('/api/tts')
+      .set('Authorization', 'Bearer token-expirado')
+      .send({ text: 'Olá.' })
+
+    assert.equal(res.status, 401)
+    assert.deepEqual(res.body, { error: 'Não autenticado' })
+    assert.equal(googleFetch.mock.callCount(), 0)
+  })
+
+  it('deveQuebrarEmVariasChamadasEConcatenarAudioQuandoTextoLongo', async () => {
+    const res = await request(app)
+      .post('/api/tts')
+      .set('Authorization', 'Bearer token-valido')
+      .send({ text: 'Frase de teste. '.repeat(400) })
+
+    assert.equal(res.status, 200)
+    assert.ok(googleFetch.mock.callCount() > 1)
+    assert.equal(res.body.toString(), 'MP3'.repeat(googleFetch.mock.callCount()))
+  })
+
   it('deveLerPaginaEscaneadaFazendoOcrEDepoisGerandoAudio', async () => {
     // fluxo do botão play com PDF escaneado: imagem -> OCR -> texto -> TTS -> mp3
     const ocr = await request(app)
