@@ -31,10 +31,12 @@ function PdfViewer({ pdfUrl, onMenuToggle }: PdfViewerProps) {
   // muda a cada stop, pra descartar um áudio que chegou depois do usuário trocar de página
   const leitura = useRef(0)
 
-  {/* função toda vez que o pdf mudsar, ele volta para a pagina 1 */}
-  useEffect(() => {
+  {/* toda vez que o pdf mudar, ele volta para a pagina 1 */}
+  const [pdfAnterior, setPdfAnterior] = useState(pdfUrl)
+  if (pdfAnterior !== pdfUrl) {
+    setPdfAnterior(pdfUrl)
     setPageNumber(1)
-  }, [pdfUrl])
+  }
 
   {/* trocou de página ou de pdf: para o áudio */}
   useEffect(() => stop, [pageNumber, pdfUrl])
@@ -97,9 +99,11 @@ function PdfViewer({ pdfUrl, onMenuToggle }: PdfViewerProps) {
     }
   }
 
-  useEffect(() => {
+  const [paginaAnterior, setPaginaAnterior] = useState(pageNumber)
+  if (paginaAnterior !== pageNumber) {
+    setPaginaAnterior(pageNumber)
     setInputPage(String(pageNumber))
-  }, [pageNumber])
+  }
 
   {/* funções avançar e voltar paginas */}
   function prevPage() {

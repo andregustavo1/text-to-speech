@@ -115,7 +115,7 @@ const [userId, setUserId] = useState<string | null>(null)
                   )}
               
                   
-                    <div   onClick={(e) => {e.stopPropagation(); const rect = e.currentTarget.getBoundingClientRect(); setMenuPos({ x: rect.right - 140, y: rect.bottom + 4 }), setLibMenuDisplay((prev) => (prev === pdf.name ? null : pdf.name))}} 
+                    <div   onClick={(e) => {e.stopPropagation(); const rect = e.currentTarget.getBoundingClientRect(); setMenuPos({ x: rect.right - 140, y: rect.bottom + 4 }); setLibMenuDisplay((prev) => (prev === pdf.name ? null : pdf.name))}} 
                       className='hover:bg-slate-500 text-slate-400 hover:text-slate-100 duration-150 rounded-full p-1.5 '>
                       <RiMenuLine className="shrink-0 text-xl" />
                     </div>

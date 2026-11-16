@@ -54,4 +54,6 @@ function Button({
   )
 }
 
+// arquivo gerado pelo shadcn: exportar o buttonVariants junto é o padrão dele
+// oxlint-disable-next-line react/only-export-components
 export { Button, buttonVariants }
