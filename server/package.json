@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "node --watch --env-file=.env index.js",
     "start": "node --env-file=.env index.js",
-    "test": "node --test"
+    "test": "node --test",
+    "test:unit": "node --test \"services/*.test.js\"",
+    "test:integration": "node --test \"test/*.test.js\""
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.3",
